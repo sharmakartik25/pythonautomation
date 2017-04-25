@@ -3,38 +3,59 @@ Python app to run custom commands and scripts on remote hosts
 
 ## <font color='blue'>Python Runbook automation task using Flask</font>
 
-#### 1. Flask Setup
-
+#### 1. Docker Setup:
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Run the below commands on master 
-
 - sudo apt-get update
 - sudo apt-get upgrade
-- sudo apt-get install python-dev
-- sudo apt-get install python-flask
-- sudo apt-get install python-pip
-- sudo apt-get install virtualenv
-- sudo apt-get install python-virtualenv
-- sudo apt-get install python-pip python-dev libffi-dev libssl-dev libxml2-dev libxslt1-dev libjpeg8-dev zlib1g-dev
-- pip install paramiko
+- sudo apt-get install \
+  linux-image-extra-$(uname -r) \
+  linux-image-extra-virtual
+- sudo apt-get install \
+  apt-transport-https \
+  ca-certificates \
+  curl \
+  software-properties-common
+- curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+- sudo apt-key fingerprint 0EBFCD88
+- sudo add-apt-repository \
+  "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) \
+  stable"
+- sudo apt-get update
+- apt-get install docker-ce
 - mkdir myproject
 - cd myproject
-- virtualenv venv
-- . venv/bin/activate
 
-#### 2. Copy the code in file code.py
-#### 3. Copy the key in /home/key.pem on Master
+#### 2. Git Setup:
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Run the below commands on master 
+- sudo apt-get update
+- sudo apt-get install git
+
+#### 3. Pull the current code from Git to Master & create the configuration:
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Run the below commands on master 
+- git clone https://github.com/sharmakartik25/pythonautomation.git
 
 #### 4. Keep the following ready to pass as arguments to rest api:
 - Hostname(DNS).
 - Username
 - RSA-Key
 - Commands to be executed on minion machine
-    
-#### 5. Run Python script 
-- python code.py
+
+#### 5. Copy your remote minion private-keys in the cloned key directory:
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Run the below commands on master 
+- cp key.pem pythonautomation/key/
+
+#### 6. Build & Run the required container on your master:
+- cd pythonautomation
+- docker build -t pythonautomation .
+- docker run -p 4000:5000 dockerapp
+- Alternatively you can run the following command to test the pushed container Image directly from Docker Repo
+
+#### 7. As alternate to step 6, run the following command to test the pushed container Image directly from Docker Repo:
+- docker run -p 4000:5000 sharmakartik25/pythonautomation:flaskapp
 
 #### 6 On duplicate terminal of master run the following to post the arguments:
-- curl -H "Content-Type: application/json" -X POST -d '{"Arguments": {"id": "13","host": "ec2-35-165-180-52.us-west-2.compute.amazonaws.com","username": "ubuntu","rsa-key": "key.pem","command": ["ls -lts /home/ubuntu", "mkdir /home/ubuntu/test"]}}' http://localhost:5000/messages 
+- curl -H "Content-Type: application/json" -X POST -d '{"Arguments": {"id": "1","host": "remote_minion_public_ip/DNS","username": "username_for_remote_minion","rsa-key": "name_of_the_key_file_used","command": ["ls -ltr /home/ubuntu", "mkdir /home/ubuntu/test"]}}' http://remote_minion_public_ip/DNS:4000/api/run/
 
 #### &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OR
 
@@ -42,7 +63,7 @@ Python app to run custom commands and scripts on remote hosts
 
 METHOD  |  URI                        |DESCRIPTION
 --------|---------------------------- |-------------
-POST    | /messages                   |connect to remote host and execute command
+POST    | /api/run/                   |connect to remote host and execute command
 
 <p>
 It establish connection with given details of host and execute command on it.
@@ -75,9 +96,9 @@ Content-Type         | String                      |application/json
 {
 "Arguments": {
             "id": "13",
-            "host": "ec2-35-165-39-113.us-west-2.compute.amazonaws.com",
-            "username": "ubuntu",
-            "rsa-key": "key.pem",
+            "host": "remote_minion_public_ip/DNS",
+            "username": "username_for_remote_minion",
+            "rsa-key": "name_of_the_key_file_used",
             "command": ["ls -lts /home/ubuntu", "mkdir /home/ubuntu/test"]
             }
 }
