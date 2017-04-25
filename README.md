@@ -40,7 +40,7 @@ Python app to run custom commands and scripts on remote hosts
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Run the below commands on master: 
 - cd pythonautomation
 - docker build -t pythonautomation .
-- docker run -p 4000:5000 dockerapp
+- docker run -p 4000:5000 pythonautomation
 
 #### 7. As alternate to step 6, run the following command to test the pushed container Image directly from Docker Repo
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Run the below commands on master: 
