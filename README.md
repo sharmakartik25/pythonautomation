@@ -7,20 +7,12 @@ Python app to run custom commands and scripts on remote hosts
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Run the below commands on master:
 - sudo apt-get update
 - sudo apt-get upgrade
-- sudo apt-get install \
-  linux-image-extra-$(uname -r) \
-  linux-image-extra-virtual
-- sudo apt-get install \
-  apt-transport-https \
-  ca-certificates \
-  curl \
-  software-properties-common
+- sudo apt-get install linux-image-extra-$(uname -r) linux-image-extra-virtual
+- sudo apt-get install apt-transport-https ca-certificates curl software-properties-common
 - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 - sudo apt-key fingerprint 0EBFCD88
-- sudo add-apt-repository \
-  "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-  $(lsb_release -cs) \
-  stable"
+- sudo add-apt-repository \\
+  "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 - sudo apt-get update
 - apt-get install docker-ce
 - mkdir myproject
