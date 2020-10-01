@@ -105,7 +105,7 @@ For testing the app working.
 ##### <b>Normal response codes</b>: 200
 
 **Note**
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This table shows the header parameters for get request:</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;This table shows the header parameters for get request:</p>
 
 Name                 |  Type                       |DESCRIPTION
 ---------------------|---------------------------- |-------------
